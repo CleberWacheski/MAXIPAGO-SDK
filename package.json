@@ -1,0 +1,49 @@
+{
+   "name": "maxipago-sdk",
+   "version": "1.0.0",
+   "description": "Esta SDK facilita a integração com a maxipago, permitindo que você se conecte a várias adquirentes com uma única solução. Compatível com diferentes métodos de pagamento, como cartões de crédito, débito, e-wallets, e muito mais. Oferece uma API simples e flexível para gerenciar transações, consultar status de pagamentos e realizar reembolsos, entre outras funcionalidades essenciais para uma experiência de pagamento fluida e segura.",
+   "main": "./dist/index.js",
+   "module": "./dist/index.mjs",
+   "types": "./dist/index.d.ts",
+   "files": [
+      "dist"
+   ],
+   "publishConfig": {
+      "access": "public"
+   },
+   ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+   },
+   "scripts": {
+      "test": "vitest",
+      "build": "tsup"
+   },
+   "keywords": [
+      "maxipago",
+      "itau",
+      "pagamento"
+   ],
+   "author": "CleberWacheski",
+   "license": "MIT",
+   "packageManager": "pnpm@10.4.1",
+   "dependencies": {
+      "xml-js": "^1.6.11",
+      "xml2js": "^0.6.2"
+   },
+   "peerDependencies": {
+      "axios": "1.x",
+      "zod": "3.x"
+   },
+   "devDependencies": {
+      "@types/xml2js": "^0.4.14",
+      "tsup": "^8.4.0",
+      "typescript": "^5.8.2",
+      "vitest": "^3.0.8",
+      "@eslint/js": "^9.8.0",
+      "eslint": "^9.8.0",
+      "globals": "^15.9.0",
+      "typescript-eslint": "^8.0.1"
+   }
+}
