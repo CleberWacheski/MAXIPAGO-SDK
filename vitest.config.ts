@@ -12,6 +12,7 @@ export default defineConfig({
             singleThread: true,
          },
       },
+      setupFiles: ["dotenv/config"],
       pool: "threads",
       alias: [
          {

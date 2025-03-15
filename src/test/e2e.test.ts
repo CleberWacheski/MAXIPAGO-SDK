@@ -2,11 +2,11 @@ import { MaxiPagoSDK } from "src";
 import { expect, test } from "vitest";
 
 const auth = {
-   merchantId: "",
-   merchantKey: "",
+   merchantId: process.env.MAXIPAGO_MERCHANT_ID!,
+   merchantKey: process.env.MAXIPAGO_MERCHANT_KEY!,
 };
 
-test("DEVE SER CAPAZ DE CRIAR UM CLIENTE", async () => {
+test.only("DEVE SER CAPAZ DE CRIAR UM CLIENTE", async () => {
    const sdk = new MaxiPagoSDK(auth, "development");
    const customerId = await sdk.createCustomer({
       customerIdExt: "46674194662",
