@@ -18,6 +18,7 @@ import {
    createBuildXMLDirectTransaction,
    createBuildXMLDirectTransactionWithToken,
 } from "@module/transaction";
+import { WebhookXMLHandler } from "@module/webhook";
 import {
    buildXMLZeroDollar,
    buildXMLZeroDollarWithToken,
@@ -257,5 +258,9 @@ export class MaxiPagoSDK {
       const response = formatResponse(data);
       const parsedResponse = CreatePixResponseSchema.parse(response);
       return parsedResponse;
+   }
+   webHookHandler(xml: string) {
+      const response = WebhookXMLHandler(xml);
+      return response;
    }
 }

@@ -1,7 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { xml2json } from "xml-js";
 import { Builder, Options as XML2JSOptions } from "xml2js";
-
-const isDebug = process.env.NODE_ENV != "production";
 
 export const convertResponse = (value: any, parentElement: any) => {
    try {
@@ -39,19 +38,24 @@ export const formatResponse = (xml: string) => {
       ignoreDoctype: true,
       textFn: convertResponse,
    };
-   xml = xml.replace("rapi-response", "response");
-   xml = xml.replace("rapi-response", "response");
-   xml = xml.replace("api-response", "response");
-   xml = xml.replace("api-response", "response");
-   xml = xml.replace("transaction-response", "response");
-   xml = xml.replace("transaction-response", "response");
+   xml = xml.replaceAll(`xml=<?xml version="1.0" encoding="UTF-8"?>`, "");
+   xml = xml.replaceAll("rapi-response", "response");
+   xml = xml.replaceAll("Request", "request");
+   xml = xml.replaceAll("rapi-response", "response");
+   xml = xml.replaceAll("api-response", "response");
+   xml = xml.replaceAll("api-response", "response");
+   xml = xml.replaceAll("transaction-response", "response");
+   xml = xml.replaceAll("transaction-response", "response");
+   xml = xml.replaceAll("transaction-event", "response");
+   xml = xml.replaceAll("referenceNum>", "referenceNumber>");
    const jsonResponse = transformEmptyObjects(
       JSON.parse(xml2json(xml, options))
    );
-   if (isDebug) {
-      console.log("development mode");
-      console.log(xml);
-      console.log(jsonResponse);
+   if (jsonResponse["request"] !== undefined) {
+      if (jsonResponse["request"].response !== undefined) {
+         return jsonResponse["request"].response;
+      }
+      return jsonResponse["Request"];
    }
    if (typeof jsonResponse.response !== "undefined") {
       return jsonResponse.response;

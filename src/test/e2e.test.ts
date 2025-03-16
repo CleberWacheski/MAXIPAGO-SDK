@@ -681,3 +681,185 @@ test("DEVE SER CAPAZ DE CRIAR UMA TRANSAÇÃO PIX", async () => {
    expect(response.transactionID).toBeTruthy();
    expect(response.onlineDebitUrl).toBeTruthy();
 });
+
+test("DEVE SER CAPAZ DE LIDAR COM OS DADOS DO WEBHOOK", () => {
+   const sdk = new MaxiPagoSDK(auth, "development");
+   let response = sdk.webHookHandler(`
+<Request>
+<transaction-event>
+<brandMessage>Success.</brandMessage>
+<brandCode>00</brandCode>
+<processorCode>00</processorCode>
+<transactionStatus>3</transactionStatus>
+<transactionType>CreditCardCapture</transactionType>
+<transactionID>520330398</transactionID>
+<tid>11182212131744289937</tid>
+<brandTid></brandTid>
+<orderID>0A0115CD:01850D44AB52:262C:156EDFB5</orderID>
+<transactionState>Captured</transactionState>
+<transactionDate>12-13-2022 17:54:46</transactionDate>
+<nsu>384248853</nsu>
+<merchantId>36xxx</merchantId>
+<referenceNumber>2022121317515887</referenceNumber>
+<transactionAmount>1</transactionAmount>
+<processorMessage>Success.</processorMessage>
+</transaction-event>
+</Request>`);
+   expect(response.orderID).toBe("0A0115CD:01850D44AB52:262C:156EDFB5");
+   expect(response.transactionID).toBe(520330398);
+   expect(response.referenceNumber).toBe(2022121317515887);
+   expect(response.transactionStatus).toBe("Captured");
+   expect(response.transactionType).toBe("CreditCardCapture");
+
+   response = sdk.webHookHandler(`
+xml=<?xml version="1.0" encoding="UTF-8"?>
+<Request>
+<transaction-event>
+<processorCode>00</processorCode>
+<transactionStatus>3</transactionStatus>
+<transactionType>CreditCardCapture</transactionType>
+<transactionID>520330398</transactionID>
+<tid>11182212131744289937</tid>
+<brandTid></brandTid>
+<orderID>0A0115CD:01850D44AB52:262C:156EDFB5</orderID>
+<transactionState>Captured</transactionState>
+<transactionDate>12-13-2022 17:54:46</transactionDate>
+<nsu>384248853</nsu>
+<merchantId>3xxxx</merchantId>
+<referenceNumber>2022121317515887</referenceNumber>
+<transactionAmount>1</transactionAmount>
+<processorMessage>Success.</processorMessage>
+</transaction-event>
+</Request>`);
+   expect(response.orderID).toBe("0A0115CD:01850D44AB52:262C:156EDFB5");
+   expect(response.transactionID).toBe(520330398);
+   expect(response.transactionStatus).toBe("Captured");
+   expect(response.transactionType).toBe("CreditCardCapture");
+   expect(response.referenceNumber).toBe(2022121317515887);
+
+   response = sdk.webHookHandler(`
+     xml=<?xml version="1.0" encoding="UTF-8"?>
+<Request>
+<transaction-event>
+<processorCode>25</processorCode>
+<transactionStatus>7</transactionStatus>
+<transactionType>CreditCardSale</transactionType>
+<transactionID>13958523</transactionID>
+<tid></tid>
+<brandTid></brandTid>
+<orderID>0A010497:0184F87F5A52:9816:5079CE74</orderID>
+<transactionState>Declined</transactionState>
+<transactionDate>12-09-2022 17:06:46</transactionDate>
+<nsu></nsu>
+<merchantId>1xxxxx</merchantId>
+<referenceNumber>Order-202212099255</referenceNumber>
+<transactionAmount>10.00</transactionAmount>
+<processorMessage>Affiliation: Invalid parameter format.</processorMessage>
+</transaction-event>
+</Request>`);
+   expect(response.orderID).toBe("0A010497:0184F87F5A52:9816:5079CE74");
+   expect(response.transactionID).toBe(13958523);
+   expect(response.referenceNumber).toBe("Order-202212099255");
+   expect(response.transactionStatus).toBe("Declined");
+   expect(response.transactionType).toBe("CreditCardSale");
+
+   response = sdk.webHookHandler(`
+      xml=<?xml version="1.0" encoding="UTF-8"?>
+<transaction-response>
+<authCode/>
+<orderID/>
+<referenceNum>4040764123</referenceNum>
+<transactionID>460312421</transactionID>
+<transactionTimestamp/>
+<responseCode>0</responseCode>
+<responseMessage>VOIDED</responseMessage>
+<avsResponseCode/>
+<cvvResponseCode/>
+<processorCode>173</processorCode>
+<processorMessage>Authorization expired.</processorMessage>
+<processorName>REDE</processorName>
+<errorMessage/>
+<creditCardScheme>Visa</creditCardScheme>
+</transaction-response>`);
+   expect(response.orderID).toBe("");
+   expect(response.referenceNumber).toBe(4040764123);
+   expect(response.transactionID).toBe(460312421);
+
+   response = sdk.webHookHandler(`
+xml=<?xml version="1.0" encoding="UTF-8"?>
+<transaction-response>
+<authCode/>
+<orderID/>
+<referenceNum>4040764123</referenceNum>
+<transactionID>460312421</transactionID>
+<transactionTimestamp/>
+<responseCode>0</responseCode>
+<responseMessage>VOIDED</responseMessage>
+<avsResponseCode/>
+<cvvResponseCode/>
+<processorCode>173</processorCode>
+<processorMessage>Authorization expired.</processorMessage>
+<processorName>REDE</processorName>
+<errorMessage/>
+<creditCardScheme>Visa</creditCardScheme>
+</transaction-response>`);
+   expect(response.orderID).toBe("");
+   expect(response.referenceNumber).toBe(4040764123);
+   expect(response.transactionID).toBe(460312421);
+
+   response = sdk.webHookHandler(`
+      xml=<?xml version="1.0" encoding="UTF-8"?>
+<Request>
+<transaction-event>
+<orderID>0A0115CD:01850D44AB52:262C:156EDFB5</orderID>
+<merchantId>716413</merchantId>
+<recurringFlag>Y</recurringFlag>
+<transactionDate>08-13-2024 17:54:46</transactionDate>
+<brandCode>00</brandCode>
+<brandTid>MBKRL4UJX0510</brandTid>
+<referenceNumber>29506_CARTAO_1715282846.271611</referenceNumber>
+<transactionType>CreditCardSale</transactionType>
+<nsu>84248853</nsu>
+<transactionStatus>3</transactionStatus>
+<transactionID>621326149</transactionID>
+<processorCode>00</processorCode>
+<transactionAmount>0.01</transactionAmount>
+<brandMessage>Success.</brandMessage>
+<tid>10482405100408363699</tid>
+<transactionState>Captured</transactionState>
+<recurring>
+<status>ACTIVE</status>
+<failedThreshold>3</failedThreshold>
+<onFailureAction>skip</onFailureAction>
+<runCount>2</runCount>
+<numberOfFailures>0</numberOfFailures>
+<numberOfInstallments>-1</numberOfInstallments>
+</recurring>
+<processorMessage>Success.</processorMessage>
+</transaction-event>
+</Request>`);
+   expect(response.orderID).toBe("0A0115CD:01850D44AB52:262C:156EDFB5");
+   expect(response.referenceNumber).toBe("29506_CARTAO_1715282846.271611");
+   expect(response.transactionID).toBe(621326149);
+   expect(response.transactionStatus).toBe("Captured");
+   expect(response.transactionType).toBe("CreditCardSale");
+
+   response = sdk.webHookHandler(`
+xml=<?xml version="1.0" encoding="UTF-8"?>
+<Request>
+<transaction-event>
+<transactionStatus>3</transactionStatus>
+<transactionType>PixSale</transactionType>
+<orderID>0A01049C:017D4824A517:6280:5556432E</orderID>
+<transactionState>Captured</transactionState>
+<transactionDate>08-19-2017 00:56:27</transactionDate>
+<merchantId>1xxxx</merchantId>
+<transactionAmount>24.00</transactionAmount>
+<referenceNumber>20200001</referenceNumber>
+</transaction-event>
+</Request>`);
+   expect(response.orderID).toBe("0A01049C:017D4824A517:6280:5556432E");
+   expect(response.referenceNumber).toBe(20200001);
+   expect(response.transactionStatus).toBe("Captured");
+   expect(response.transactionType).toBe("PixSale");
+});
