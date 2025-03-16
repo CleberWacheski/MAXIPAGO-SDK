@@ -6,7 +6,7 @@ export const CreatePixResponseSchema = z.object({
    referenceNum: z.coerce.string(),
    transactionID: z.coerce.string(),
    transactionTimestamp: z.coerce.string(),
-   responseCode: z.coerce.string(),
+   responseCode: z.literal(0),
    responseMessage: z.coerce.string(),
    avsResponseCode: z.coerce.string(),
    cvvResponseCode: z.coerce.string(),

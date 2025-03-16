@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const CreateCardResponseSchema = z.object({
-   errorCode: z.coerce.number(),
+   errorCode: z.literal(0),
    errorMessage: z.string().optional(),
    command: z.string(),
    time: z.coerce.number(),
@@ -11,7 +11,7 @@ export const CreateCardResponseSchema = z.object({
 });
 
 export const DeleteCardResponseSchema = z.object({
-   errorCode: z.coerce.number(),
+   errorCode: z.literal(0),
    errorMessage: z.string().optional(),
    command: z.string(),
    time: z.coerce.number(),

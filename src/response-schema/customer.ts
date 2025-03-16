@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const CreateCustomerResponseSchema = z.object({
-   errorCode: z.coerce.number(),
+   errorCode: z.literal(0),
    errorMessage: z.string().optional(),
    command: z.string(),
    time: z.coerce.number(),
@@ -11,14 +11,14 @@ export const CreateCustomerResponseSchema = z.object({
 });
 
 export const UpdateCustomerResponseSchema = z.object({
-   errorCode: z.coerce.number(),
+   errorCode: z.literal(0),
    errorMessage: z.string().optional(),
    command: z.string(),
    time: z.coerce.number(),
 });
 
 export const DeleteCustomerResponseSchema = z.object({
-   errorCode: z.coerce.number(),
+   errorCode: z.literal(0),
    errorMessage: z.string().optional(),
    command: z.string(),
    time: z.coerce.number(),

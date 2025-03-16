@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const OrderQueryResponseSchema = z.object({
    header: z.object({
-      errorCode: z.coerce.number(),
+      errorCode: z.literal(0),
       errorMsg: z.string().optional(),
       command: z.string(),
       time: z.coerce.string(),
