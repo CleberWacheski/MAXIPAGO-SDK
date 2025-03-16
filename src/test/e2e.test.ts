@@ -6,7 +6,7 @@ const auth = {
    merchantKey: process.env.MAXIPAGO_MERCHANT_KEY!,
 };
 
-test.only("DEVE SER CAPAZ DE CRIAR UM CLIENTE", async () => {
+test("DEVE SER CAPAZ DE CRIAR UM CLIENTE", async () => {
    const sdk = new MaxiPagoSDK(auth, "development");
    const customerId = await sdk.createCustomer({
       customerIdExt: "46674194662",
@@ -129,7 +129,7 @@ test("DEVE SER CAPAZ DE FAZER UMA VENDA COM CARTÃO TOKENIZADO APROVADO", async 
    });
    const response = await sdk.createTransactionWithToken({
       sale: {
-         processorID: 1,
+         processorID: "1",
          referenceNum: "123456",
          payment: {
             currencyCode: "BRL",
@@ -179,7 +179,7 @@ test("DEVE SER CAPAZ DE FAZER UMA VENDA COM CARTÃO TOKENIZADO DECLINADO", async
    await expect(() =>
       sdk.createTransactionWithToken({
          sale: {
-            processorID: 1,
+            processorID: "1",
             referenceNum: "123456",
             payment: {
                currencyCode: "BRL",
@@ -230,7 +230,7 @@ test("DEVE SER CAPAZ DE FAZER UMA TRANSAÇÃO ZERO DOLLAR COM TOKEN", async () =
          payment: {
             chargeTotal: "0.00",
          },
-         processorID: 1,
+         processorID: "1",
          referenceNum: "123456",
          transactionDetail: {
             payType: {
@@ -253,11 +253,11 @@ test("DEVE SER CAPAZ DE AUTORIZAR UMA COMPRA", async () => {
             chargeTotal: "100.00",
             creditInstallment: {
                chargeInterest: "Y",
-               numberOfInstallments: 2,
+               numberOfInstallments: "2",
             },
             currencyCode: "BRL",
          },
-         processorID: 1,
+         processorID: "1",
          referenceNum: "123456",
          transactionDetail: {
             payType: {
@@ -298,11 +298,11 @@ test("DEVE SER CAPAZ DE CAPTURAR UMA COMPRA APOS SER AUTORIZADA", async () => {
             chargeTotal: "100.00",
             creditInstallment: {
                chargeInterest: "Y",
-               numberOfInstallments: 2,
+               numberOfInstallments: "2",
             },
             currencyCode: "BRL",
          },
-         processorID: 1,
+         processorID: "1",
          referenceNum: "123456",
          transactionDetail: {
             payType: {
@@ -351,13 +351,13 @@ test("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
    const sdk = new MaxiPagoSDK(auth, "development");
    const response = await sdk.createRecurring({
       recurringPayment: {
-         processorID: 1,
+         processorID: "1",
          referenceNum: "123456",
          payment: {
             chargeTotal: "500.00",
             creditInstallment: {
                chargeInterest: "N",
-               numberOfInstallments: 1,
+               numberOfInstallments: "1",
             },
             currencyCode: "BRL",
          },
@@ -388,10 +388,10 @@ test("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
          recurring: {
             action: "new",
             onFailureAction: "pause",
-            failureThreshold: 3,
+            failureThreshold: "3",
             installments: "infinite",
             period: "monthly",
-            frequency: 1,
+            frequency: "1",
             startDate: "2025-04-10",
          },
          shipping: {
@@ -415,13 +415,13 @@ test("DEVE SER CAPAZ DE DELETAR UMA RECORRÊNCIA", async () => {
    const sdk = new MaxiPagoSDK(auth, "development");
    const response = await sdk.createRecurring({
       recurringPayment: {
-         processorID: 1,
+         processorID: "1",
          referenceNum: "123456",
          payment: {
             chargeTotal: "500.00",
             creditInstallment: {
                chargeInterest: "N",
-               numberOfInstallments: 1,
+               numberOfInstallments: "1",
             },
             currencyCode: "BRL",
          },
@@ -452,10 +452,10 @@ test("DEVE SER CAPAZ DE DELETAR UMA RECORRÊNCIA", async () => {
          recurring: {
             action: "new",
             onFailureAction: "pause",
-            failureThreshold: 3,
+            failureThreshold: "3",
             installments: "infinite",
             period: "monthly",
-            frequency: 1,
+            frequency: "1",
             startDate: "2025-04-10",
          },
          shipping: {
@@ -482,13 +482,13 @@ test("DEVE SER CAPAZ DE EDITAR UMA RECORRÊNCIA", async () => {
    const sdk = new MaxiPagoSDK(auth, "development");
    const response = await sdk.createRecurring({
       recurringPayment: {
-         processorID: 1,
+         processorID: "1",
          referenceNum: "123456",
          payment: {
             chargeTotal: "500.00",
             creditInstallment: {
                chargeInterest: "N",
-               numberOfInstallments: 1,
+               numberOfInstallments: "1",
             },
             currencyCode: "BRL",
          },
@@ -519,10 +519,10 @@ test("DEVE SER CAPAZ DE EDITAR UMA RECORRÊNCIA", async () => {
          recurring: {
             action: "new",
             onFailureAction: "pause",
-            failureThreshold: 3,
+            failureThreshold: "3",
             installments: "infinite",
             period: "monthly",
-            frequency: 1,
+            frequency: "1",
             startDate: "2025-04-10",
          },
          shipping: {
@@ -606,7 +606,7 @@ test("DEVE SER CAPAZ DE CONSULTAR UMA TRANSAÇÃO", async () => {
    });
    const response = await sdk.createTransactionWithToken({
       sale: {
-         processorID: 1,
+         processorID: "1",
          referenceNum: "123456",
          payment: {
             currencyCode: "BRL",

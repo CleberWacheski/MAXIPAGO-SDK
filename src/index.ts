@@ -70,6 +70,7 @@ import {
 import { OrderQuery } from "./types/transaction-query";
 import { ZeroDollar } from "./types/zero-dollar";
 import { ZeroDollarWithToken } from "./types/zero-dollar-token";
+import { RecursivePartial } from "./utils/recursive-partial";
 import { formatResponse } from "./utils/utils";
 
 export class MaxiPagoSDK {
@@ -100,7 +101,7 @@ export class MaxiPagoSDK {
       }
    }
 
-   async createCustomer(dto: CreateCustomer) {
+   async createCustomer(dto: RecursivePartial<CreateCustomer>) {
       const XML = buildXMLCreateCustomer(dto, this.auth);
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
@@ -110,7 +111,7 @@ export class MaxiPagoSDK {
       }
       return parsedResponse.result.customerId;
    }
-   async updateCustomer(dto: UpdateCustomer) {
+   async updateCustomer(dto: RecursivePartial<UpdateCustomer>) {
       const XML = buildXMLUpdateCustomer(dto, this.auth);
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
@@ -119,7 +120,7 @@ export class MaxiPagoSDK {
          throw new Error(parsedResponse.errorMessage);
       }
    }
-   async deleteCustomer(dto: DeleteCustomer) {
+   async deleteCustomer(dto: RecursivePartial<DeleteCustomer>) {
       const XML = buildXMLDeleteCustomer(dto, this.auth);
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
@@ -128,7 +129,7 @@ export class MaxiPagoSDK {
          throw new Error(parsedResponse.errorMessage);
       }
    }
-   async createCard(dto: CreateCard) {
+   async createCard(dto: RecursivePartial<CreateCard>) {
       const XML = buildXMLCreateCard(dto, this.auth);
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
@@ -138,7 +139,7 @@ export class MaxiPagoSDK {
       }
       return parsedResponse.result.token;
    }
-   async deleteCard(dto: DeleteCard) {
+   async deleteCard(dto: RecursivePartial<DeleteCard>) {
       const XML = buildXMLDeleteCard(dto, this.auth);
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
@@ -149,7 +150,7 @@ export class MaxiPagoSDK {
       return response;
    }
    async createTransactionAuthorizationOnly(
-      dto: CreateAuthorizationTransactionOnly
+      dto: RecursivePartial<CreateAuthorizationTransactionOnly>
    ) {
       const XML = buildXMLCreateTransactionAuthorizationOnly(dto, this.auth);
       const { data } = await api.post(this.POST_XML, XML);
@@ -159,7 +160,7 @@ export class MaxiPagoSDK {
       return parsedResponse;
    }
    async createTransactionCaptureAfterAuthorization(
-      dto: CreateTransactionCaptureAfterAuthorization
+      dto: RecursivePartial<CreateTransactionCaptureAfterAuthorization>
    ) {
       const XML = buildXMLCreateTransactionCaptureAfterAuthorization(
          dto,
@@ -171,7 +172,9 @@ export class MaxiPagoSDK {
          CreateTransactionCaptureAfterAuthorizationSchema.parse(response);
       return parsedResponse;
    }
-   async createTransactionWithToken(dto: CreateDirectTransactionWithToken) {
+   async createTransactionWithToken(
+      dto: RecursivePartial<CreateDirectTransactionWithToken>
+   ) {
       const XML = createBuildXMLDirectTransactionWithToken(dto, this.auth);
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
@@ -179,7 +182,9 @@ export class MaxiPagoSDK {
          CreateTransactionWithTokenResponseSchema.parse(response);
       return parsedResponse;
    }
-   async createDirectTransaction(dto: CreateDirectTransaction) {
+   async createDirectTransaction(
+      dto: RecursivePartial<CreateDirectTransaction>
+   ) {
       const XML = createBuildXMLDirectTransaction(dto, this.auth);
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
@@ -187,21 +192,21 @@ export class MaxiPagoSDK {
          CreateDirectTransactionResponseSchema.parse(response);
       return parsedResponse;
    }
-   async chargeBack(dto: ChargeBack) {
+   async chargeBack(dto: RecursivePartial<ChargeBack>) {
       const XML = buildXMLChargeBack(dto, this.auth);
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
       const parsedResponse = ChargeBackResponseSchema.parse(response);
       return parsedResponse;
    }
-   async createRecurring(dto: CreateRecurring) {
+   async createRecurring(dto: RecursivePartial<CreateRecurring>) {
       const XML = buildXMLCreateRecurring(dto, this.auth);
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
       const parsedResponse = CreateRecurringResponseSchema.parse(response);
       return parsedResponse;
    }
-   async updateRecurring(dto: UpdateRecurring) {
+   async updateRecurring(dto: RecursivePartial<UpdateRecurring>) {
       const XML = buildXMLUpdateRecurring(dto, this.auth);
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
@@ -211,7 +216,7 @@ export class MaxiPagoSDK {
       }
       return response;
    }
-   async cancelRecurring(dto: DeleteRecurring) {
+   async cancelRecurring(dto: RecursivePartial<DeleteRecurring>) {
       const XML = buildXMLDeleteRecurring(dto, this.auth);
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
@@ -221,7 +226,7 @@ export class MaxiPagoSDK {
       }
       return response;
    }
-   async orderQuery(dto: OrderQuery) {
+   async orderQuery(dto: RecursivePartial<OrderQuery>) {
       const XML = buildXMLOrderQuery(dto, this.auth);
       const { data } = await api.post(this.REPORTS_API, XML);
       const response = formatResponse(data);
@@ -231,14 +236,14 @@ export class MaxiPagoSDK {
       }
       return parsedResponse;
    }
-   async zeroDollar(dto: ZeroDollar) {
+   async zeroDollar(dto: RecursivePartial<ZeroDollar>) {
       const XML = buildXMLZeroDollar(dto, this.auth);
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
       const parsedResponse = CreateZeroDollarResponseSchema.parse(response);
       return parsedResponse;
    }
-   async zeroDollarWithToken(dto: ZeroDollarWithToken) {
+   async zeroDollarWithToken(dto: RecursivePartial<ZeroDollarWithToken>) {
       const XML = buildXMLZeroDollarWithToken(dto, this.auth);
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
@@ -246,7 +251,7 @@ export class MaxiPagoSDK {
          CreateZeroDollarWithTokenResponseSchema.parse(response);
       return parsedResponse;
    }
-   async createPix(dto: CreatePix) {
+   async createPix(dto: RecursivePartial<CreatePix>) {
       const XML = buildXMLCreatePix(dto, this.auth);
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);

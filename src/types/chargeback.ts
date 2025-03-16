@@ -7,5 +7,5 @@ export type ChargeBack = {
 };
 
 type Payment = {
-   chargeTotal: number;
+   chargeTotal: string;
 };

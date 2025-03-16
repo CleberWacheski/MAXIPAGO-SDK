@@ -22,9 +22,9 @@ type PaymentInfo = {
 type Recurring = {
    processorID: string;
    action: "enable" | "disable";
-   installments: number | string;
-   nextFireDate?: string;
-   fireDay?: string;
+   installments: string;
+   nextFireDate: string;
+   fireDay: string;
    period:
       | "annual"
       | "quarterly"
@@ -33,14 +33,14 @@ type Recurring = {
       | "daily"
       | "biMonthly"
       | "semiAnnual";
-   lastDate?: string;
-   lastAmount?: string;
+   lastDate: string;
+   lastAmount: string;
 };
 
 type BillingInfo = {
    name: string;
    address1: string;
-   address2?: string;
+   address2: string;
    city: string;
    zip: string;
    country: string;
@@ -51,7 +51,7 @@ type BillingInfo = {
 type ShippingInfo = {
    name: string;
    address1: string;
-   address2?: string;
+   address2: string;
    city: string;
    zip: string;
    country: string;

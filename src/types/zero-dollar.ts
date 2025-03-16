@@ -1,6 +1,6 @@
 export type ZeroDollar = {
    zeroDollar: {
-      processorID: number;
+      processorID: string;
       referenceNum: string;
       transactionDetail: TransactionDetail;
       payment: Payment;

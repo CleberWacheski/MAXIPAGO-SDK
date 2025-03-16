@@ -10,13 +10,16 @@ import {
    CreateDirectTransaction,
 } from "src/types/transaction";
 import { OrderQuery } from "src/types/transaction-query";
+import { RecursivePartial } from "src/utils/recursive-partial";
 import { xmlBuilder } from "src/utils/utils";
 
 export const buildXMLCreateTransactionAuthorizationOnly = (
-   request: CreateAuthorizationTransactionOnly,
+   request: RecursivePartial<CreateAuthorizationTransactionOnly>,
    MPAuth: MaxiPagoAuth
 ) => {
-   const data: TransactionRequest<CreateAuthorizationTransactionOnly> = {
+   const data: TransactionRequest<
+      RecursivePartial<CreateAuthorizationTransactionOnly>
+   > = {
       verification: MPAuth,
       order: request,
       version: "3.1.1.15",
@@ -27,25 +30,28 @@ export const buildXMLCreateTransactionAuthorizationOnly = (
 };
 
 export const buildXMLCreateTransactionCaptureAfterAuthorization = (
-   request: CreateTransactionCaptureAfterAuthorization,
+   request: RecursivePartial<CreateTransactionCaptureAfterAuthorization>,
    MPAuth: MaxiPagoAuth
 ) => {
-   const data: TransactionRequest<CreateTransactionCaptureAfterAuthorization> =
-      {
-         verification: MPAuth,
-         order: request,
-         version: "3.1.1.15",
-      };
+   const data: TransactionRequest<
+      RecursivePartial<CreateTransactionCaptureAfterAuthorization>
+   > = {
+      verification: MPAuth,
+      order: request,
+      version: "3.1.1.15",
+   };
    return xmlBuilder.buildObject({
       "transaction-request": data,
    });
 };
 
 export const createBuildXMLDirectTransactionWithToken = (
-   request: CreateDirectTransactionWithToken,
+   request: RecursivePartial<CreateDirectTransactionWithToken>,
    MPAuth: MaxiPagoAuth
 ) => {
-   const data: TransactionRequest<CreateDirectTransactionWithToken> = {
+   const data: TransactionRequest<
+      RecursivePartial<CreateDirectTransactionWithToken>
+   > = {
       verification: MPAuth,
       order: request,
       version: "3.1.1.15",
@@ -56,10 +62,10 @@ export const createBuildXMLDirectTransactionWithToken = (
 };
 
 export const createBuildXMLDirectTransaction = (
-   request: CreateDirectTransaction,
+   request: RecursivePartial<CreateDirectTransaction>,
    MPAuth: MaxiPagoAuth
 ) => {
-   const data: TransactionRequest<CreateDirectTransaction> = {
+   const data: TransactionRequest<RecursivePartial<CreateDirectTransaction>> = {
       verification: MPAuth,
       order: request,
       version: "3.1.1.15",
@@ -70,10 +76,10 @@ export const createBuildXMLDirectTransaction = (
 };
 
 export const buildXMLOrderQuery = (
-   request: OrderQuery,
+   request: RecursivePartial<OrderQuery>,
    MPAuth: MaxiPagoAuth
 ) => {
-   const data: RapiRequest<OrderQuery> = {
+   const data: RapiRequest<RecursivePartial<OrderQuery>> = {
       verification: MPAuth,
       request: request,
       command: "transactionDetailReport",

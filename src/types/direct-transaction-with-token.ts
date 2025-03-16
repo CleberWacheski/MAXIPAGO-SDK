@@ -3,7 +3,7 @@ export type CreateDirectTransactionWithToken = {
 };
 
 type Sale = {
-   processorID: number;
+   processorID: string;
    referenceNum: string;
    transactionDetail: TransactionDetail;
    payment: Payment;

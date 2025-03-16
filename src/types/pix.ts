@@ -14,7 +14,7 @@ export type Sale = {
 export type Billing = {
    name: string;
    address: string;
-   address2?: string;
+   address2: string;
    district: string;
    city: string;
    state: string;

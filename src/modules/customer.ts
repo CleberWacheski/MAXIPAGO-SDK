@@ -1,3 +1,4 @@
+import { RecursivePartial } from "src/utils/recursive-partial";
 import { CommonRequest, MaxiPagoAuth } from "../types/common-request";
 import {
    CreateCustomer,
@@ -7,10 +8,10 @@ import {
 import { xmlBuilder } from "../utils/utils";
 
 export const buildXMLCreateCustomer = (
-   request: CreateCustomer,
+   request: RecursivePartial<CreateCustomer>,
    MPAuth: MaxiPagoAuth
 ) => {
-   const data: CommonRequest<CreateCustomer> = {
+   const data: CommonRequest<RecursivePartial<CreateCustomer>> = {
       verification: MPAuth,
       command: "add-consumer",
       request: request,
@@ -21,10 +22,10 @@ export const buildXMLCreateCustomer = (
 };
 
 export const buildXMLUpdateCustomer = (
-   request: UpdateCustomer,
+   request: RecursivePartial<UpdateCustomer>,
    MPAuth: MaxiPagoAuth
 ) => {
-   const data: CommonRequest<UpdateCustomer> = {
+   const data: CommonRequest<RecursivePartial<UpdateCustomer>> = {
       verification: MPAuth,
       command: "update-consumer",
       request: request,
@@ -35,10 +36,10 @@ export const buildXMLUpdateCustomer = (
 };
 
 export const buildXMLDeleteCustomer = (
-   request: DeleteCustomer,
+   request: RecursivePartial<DeleteCustomer>,
    MPAuth: MaxiPagoAuth
 ) => {
-   const data: CommonRequest<DeleteCustomer> = {
+   const data: CommonRequest<RecursivePartial<DeleteCustomer>> = {
       verification: MPAuth,
       command: "delete-consumer",
       request: request,

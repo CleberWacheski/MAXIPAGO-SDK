@@ -1,13 +1,14 @@
 import { MaxiPagoAuth, TransactionRequest } from "src/types/common-request";
 import { ZeroDollar } from "src/types/zero-dollar";
 import { ZeroDollarWithToken } from "src/types/zero-dollar-token";
+import { RecursivePartial } from "src/utils/recursive-partial";
 import { xmlBuilder } from "src/utils/utils";
 
 export const buildXMLZeroDollar = (
-   request: ZeroDollar,
+   request: RecursivePartial<ZeroDollar>,
    MPAuth: MaxiPagoAuth
 ) => {
-   const data: TransactionRequest<ZeroDollar> = {
+   const data: TransactionRequest<RecursivePartial<ZeroDollar>> = {
       verification: MPAuth,
       order: request,
       version: "3.1.1.15",
@@ -18,10 +19,10 @@ export const buildXMLZeroDollar = (
 };
 
 export const buildXMLZeroDollarWithToken = (
-   request: ZeroDollarWithToken,
+   request: RecursivePartial<ZeroDollarWithToken>,
    MPAuth: MaxiPagoAuth
 ) => {
-   const data: TransactionRequest<ZeroDollarWithToken> = {
+   const data: TransactionRequest<RecursivePartial<ZeroDollarWithToken>> = {
       verification: MPAuth,
       order: request,
       version: "3.1.1.15",

@@ -11,16 +11,16 @@ export type CreateRecurring = {
 };
 
 type Auth = {
-   processorID: number;
+   processorID: string;
    referenceNum: string;
-   fraudCheck?: "Y" | "N";
-   customerIdExt?: string;
-   billing?: Billing;
-   shipping?: Shipping;
+   fraudCheck: "Y" | "N";
+   customerIdExt: string;
+   billing: Billing;
+   shipping: Shipping;
    transactionDetail: TransactionDetail;
    payment: Payment;
-   saveOnFile?: SaveOnFile;
-   recurring?: Recurring;
+   saveOnFile: SaveOnFile;
+   recurring: Recurring;
 };
 
 type SaveOnFile = {
@@ -30,7 +30,7 @@ type SaveOnFile = {
 type Billing = {
    name: string;
    address: string;
-   address2?: string;
+   address2: string;
    district: string;
    city: string;
    state: string;
@@ -44,7 +44,7 @@ type Billing = {
 type Shipping = {
    name: string;
    address: string;
-   address2?: string;
+   address2: string;
    district: string;
    city: string;
    state: string;
@@ -59,8 +59,8 @@ type TransactionDetail = {
 };
 
 type PayType = {
-   creditCard?: CreditCard;
-   onFile?: OnFile;
+   creditCard: CreditCard;
+   onFile: OnFile;
 };
 
 type CreditCard = {
@@ -78,13 +78,13 @@ type OnFile = {
 
 type Payment = {
    chargeTotal: string;
-   currencyCode?: string;
-   creditInstallment?: CreditInstallment;
+   currencyCode: string;
+   creditInstallment: CreditInstallment;
 };
 
 type CreditInstallment = {
-   numberOfInstallments?: number;
-   chargeInterest?: "Y" | "N";
+   numberOfInstallments: string;
+   chargeInterest: "Y" | "N";
 };
 
 type Recurring = {
@@ -98,8 +98,8 @@ type Recurring = {
       | "daily"
       | "biMonthly"
       | "semiAnnual";
-   frequency: number;
+   frequency: string;
    onFailureAction: "skip" | "pause";
-   installments: number | string;
-   failureThreshold: number;
+   installments: string;
+   failureThreshold: string;
 };

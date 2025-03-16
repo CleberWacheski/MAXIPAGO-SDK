@@ -12,9 +12,9 @@ export type CreateCard = {
    billingCountry: string;
    billingPhone: string;
    billingEmail: string;
-   onFileEndDate?: string;
-   onFilePermissions?: string;
-   onFileMaxChargeAmount?: string;
+   onFileEndDate: string;
+   onFilePermissions: string;
+   onFileMaxChargeAmount: string;
 };
 export type DeleteCard = {
    token: string;
