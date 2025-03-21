@@ -1,12 +1,12 @@
 import z from "zod";
 
 export const CreatePixResponseSchema = z.object({
+   responseCode: z.literal(0),
    authCode: z.coerce.string(),
    orderID: z.coerce.string(),
    referenceNumber: z.coerce.string(),
    transactionID: z.coerce.string(),
    transactionTimestamp: z.coerce.string(),
-   responseCode: z.literal(0),
    responseMessage: z.coerce.string(),
    avsResponseCode: z.coerce.string(),
    cvvResponseCode: z.coerce.string(),

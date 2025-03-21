@@ -1,10 +1,10 @@
 import z from "zod";
 
 export const CreateRecurringResponseSchema = z.object({
+   responseCode: z.literal(0),
    orderID: z.coerce.string(),
    transactionID: z.coerce.string(),
    responseMessage: z.string(),
-   responseCode: z.literal(0),
 });
 
 export const UpdateRecurringResponseSchema = z.object({

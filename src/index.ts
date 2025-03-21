@@ -80,7 +80,9 @@ export class MaxiPagoSDK {
    private readonly REPORTS_API: string;
    constructor(
       private readonly auth: MaxiPagoAuth,
-      private readonly env: "development" | "production"
+      private readonly env: "development" | "production",
+      private readonly errorLogger?: (err: string) => void,
+      private readonly requestLogger?: (err: string) => void
    ) {
       this.POST_API =
          this.env === "development"
@@ -104,61 +106,99 @@ export class MaxiPagoSDK {
 
    async createCustomer(dto: RecursivePartial<CreateCustomer>) {
       const XML = buildXMLCreateCustomer(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
-      const parsedResponse = CreateCustomerResponseSchema.parse(response);
-      if (parsedResponse.errorCode != 0) {
-         throw new Error(parsedResponse.errorMessage);
+      const parsedResponse = CreateCustomerResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
       }
-      return parsedResponse.result.customerId;
+      return parsedResponse.data.result.customerId;
    }
    async updateCustomer(dto: RecursivePartial<UpdateCustomer>) {
       const XML = buildXMLUpdateCustomer(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
-      const parsedResponse = UpdateCustomerResponseSchema.parse(response);
-      if (parsedResponse.errorCode != 0) {
-         throw new Error(parsedResponse.errorMessage);
+      const parsedResponse = UpdateCustomerResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
       }
    }
    async deleteCustomer(dto: RecursivePartial<DeleteCustomer>) {
       const XML = buildXMLDeleteCustomer(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
-      const parsedResponse = DeleteCustomerResponseSchema.parse(response);
-      if (parsedResponse.errorCode != 0) {
-         throw new Error(parsedResponse.errorMessage);
+      const parsedResponse = DeleteCustomerResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
       }
    }
    async createCard(dto: RecursivePartial<CreateCard>) {
       const XML = buildXMLCreateCard(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
-      const parsedResponse = CreateCardResponseSchema.parse(response);
-      if (parsedResponse.errorCode != 0) {
-         throw new Error(parsedResponse.errorMessage);
+      const parsedResponse = CreateCardResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
       }
-      return parsedResponse.result.token;
+      return parsedResponse.data.result.token;
    }
    async deleteCard(dto: RecursivePartial<DeleteCard>) {
       const XML = buildXMLDeleteCard(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
-      const parsedResponse = DeleteCardResponseSchema.parse(response);
-      if (parsedResponse.errorCode != 0) {
-         throw new Error(parsedResponse.errorMessage);
+      const parsedResponse = DeleteCardResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
       }
-      return response;
    }
    async createTransactionAuthorizationOnly(
       dto: RecursivePartial<CreateAuthorizationTransactionOnly>
    ) {
       const XML = buildXMLCreateTransactionAuthorizationOnly(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
       const parsedResponse =
-         CreateTransactionAuthorizationOnlyResponseSchema.parse(response);
-      return parsedResponse;
+         CreateTransactionAuthorizationOnlyResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
+      }
+      return parsedResponse.data;
    }
    async createTransactionCaptureAfterAuthorization(
       dto: RecursivePartial<CreateTransactionCaptureAfterAuthorization>
@@ -167,97 +207,185 @@ export class MaxiPagoSDK {
          dto,
          this.auth
       );
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
       const parsedResponse =
-         CreateTransactionCaptureAfterAuthorizationSchema.parse(response);
-      return parsedResponse;
+         CreateTransactionCaptureAfterAuthorizationSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
+      }
+      return parsedResponse.data;
    }
    async createTransactionWithToken(
       dto: RecursivePartial<CreateDirectTransactionWithToken>
    ) {
       const XML = createBuildXMLDirectTransactionWithToken(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
       const parsedResponse =
-         CreateTransactionWithTokenResponseSchema.parse(response);
-      return parsedResponse;
+         CreateTransactionWithTokenResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
+      }
+      return parsedResponse.data;
    }
    async createDirectTransaction(
       dto: RecursivePartial<CreateDirectTransaction>
    ) {
       const XML = createBuildXMLDirectTransaction(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
       const parsedResponse =
-         CreateDirectTransactionResponseSchema.parse(response);
-      return parsedResponse;
+         CreateDirectTransactionResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
+      }
+      return parsedResponse.data;
    }
    async chargeBack(dto: RecursivePartial<ChargeBack>) {
       const XML = buildXMLChargeBack(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
-      const parsedResponse = ChargeBackResponseSchema.parse(response);
-      return parsedResponse;
+      const parsedResponse = ChargeBackResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
+      }
+      return parsedResponse.data;
    }
    async createRecurring(dto: RecursivePartial<CreateRecurring>) {
       const XML = buildXMLCreateRecurring(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
-      const parsedResponse = CreateRecurringResponseSchema.parse(response);
-      return parsedResponse;
+      const parsedResponse = CreateRecurringResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
+      }
+      return parsedResponse.data;
    }
    async updateRecurring(dto: RecursivePartial<UpdateRecurring>) {
       const XML = buildXMLUpdateRecurring(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
-      const parsedResponse = UpdateRecurringResponseSchema.parse(response);
-      if (parsedResponse.errorCode != 0) {
-         throw new Error(parsedResponse.errorMessage);
+      const parsedResponse = UpdateRecurringResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
       }
-      return response;
    }
    async cancelRecurring(dto: RecursivePartial<DeleteRecurring>) {
       const XML = buildXMLDeleteRecurring(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_API, XML);
       const response = formatResponse(data);
-      const parsedResponse = CancelRecurringResponseSchema.parse(response);
-      if (parsedResponse.errorCode != 0) {
-         throw new Error(parsedResponse.errorMessage);
+      const parsedResponse = CancelRecurringResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
       }
-      return response;
    }
    async orderQuery(dto: RecursivePartial<OrderQuery>) {
       const XML = buildXMLOrderQuery(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.REPORTS_API, XML);
       const response = formatResponse(data);
-      const parsedResponse = OrderQueryResponseSchema.parse(response);
-      if (parsedResponse.header.errorCode != 0) {
-         throw new Error(parsedResponse.header.errorMsg || "Error");
+      const parsedResponse = OrderQueryResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
       }
-      return parsedResponse;
+      return parsedResponse.data;
    }
    async zeroDollar(dto: RecursivePartial<ZeroDollar>) {
       const XML = buildXMLZeroDollar(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
-      const parsedResponse = CreateZeroDollarResponseSchema.parse(response);
-      return parsedResponse;
+      const parsedResponse = CreateZeroDollarResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
+      }
+      return parsedResponse.data;
    }
    async zeroDollarWithToken(dto: RecursivePartial<ZeroDollarWithToken>) {
       const XML = buildXMLZeroDollarWithToken(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
       const parsedResponse =
-         CreateZeroDollarWithTokenResponseSchema.parse(response);
-      return parsedResponse;
+         CreateZeroDollarWithTokenResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
+      }
+      return parsedResponse.data;
    }
    async createPix(dto: RecursivePartial<CreatePix>) {
       const XML = buildXMLCreatePix(dto, this.auth);
+      if (this.requestLogger) {
+         this.requestLogger(XML);
+      }
       const { data } = await api.post(this.POST_XML, XML);
       const response = formatResponse(data);
-      const parsedResponse = CreatePixResponseSchema.parse(response);
-      return parsedResponse;
+      const parsedResponse = CreatePixResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(response);
+         }
+         throw new Error(response);
+      }
+      return parsedResponse.data;
    }
    webHookHandler(xml: string) {
       const response = WebhookXMLHandler(xml);
