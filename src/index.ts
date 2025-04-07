@@ -82,7 +82,10 @@ export class MaxiPagoSDK {
       private readonly auth: MaxiPagoAuth,
       private readonly env: "development" | "production",
       private readonly errorLogger?: (err: string) => void,
-      private readonly requestLogger?: (err: string) => void
+      private readonly requestLogger?: (
+         request: string,
+         response: string
+      ) => void
    ) {
       this.POST_API =
          this.env === "development"
@@ -106,11 +109,11 @@ export class MaxiPagoSDK {
 
    async createCustomer(dto: RecursivePartial<CreateCustomer>) {
       const XML = buildXMLCreateCustomer(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
-      const { data } = await api.post(this.POST_API, XML);
+      const { data } = await api.post<string>(this.POST_API, XML);
       const response = formatResponse(data);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const parsedResponse = CreateCustomerResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
@@ -122,10 +125,10 @@ export class MaxiPagoSDK {
    }
    async updateCustomer(dto: RecursivePartial<UpdateCustomer>) {
       const XML = buildXMLUpdateCustomer(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_API, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse = UpdateCustomerResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
@@ -137,10 +140,10 @@ export class MaxiPagoSDK {
    }
    async deleteCustomer(dto: RecursivePartial<DeleteCustomer>) {
       const XML = buildXMLDeleteCustomer(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_API, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse = DeleteCustomerResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
@@ -152,10 +155,10 @@ export class MaxiPagoSDK {
    }
    async createCard(dto: RecursivePartial<CreateCard>) {
       const XML = buildXMLCreateCard(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_API, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse = CreateCardResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
@@ -168,10 +171,10 @@ export class MaxiPagoSDK {
    }
    async deleteCard(dto: RecursivePartial<DeleteCard>) {
       const XML = buildXMLDeleteCard(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_API, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse = DeleteCardResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
@@ -185,10 +188,10 @@ export class MaxiPagoSDK {
       dto: RecursivePartial<CreateAuthorizationTransactionOnly>
    ) {
       const XML = buildXMLCreateTransactionAuthorizationOnly(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_XML, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse =
          CreateTransactionAuthorizationOnlyResponseSchema.safeParse(response);
@@ -207,10 +210,10 @@ export class MaxiPagoSDK {
          dto,
          this.auth
       );
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_XML, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse =
          CreateTransactionCaptureAfterAuthorizationSchema.safeParse(response);
@@ -226,10 +229,10 @@ export class MaxiPagoSDK {
       dto: RecursivePartial<CreateDirectTransactionWithToken>
    ) {
       const XML = createBuildXMLDirectTransactionWithToken(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_XML, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse =
          CreateTransactionWithTokenResponseSchema.safeParse(response);
@@ -245,10 +248,10 @@ export class MaxiPagoSDK {
       dto: RecursivePartial<CreateDirectTransaction>
    ) {
       const XML = createBuildXMLDirectTransaction(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_XML, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse =
          CreateDirectTransactionResponseSchema.safeParse(response);
@@ -262,10 +265,10 @@ export class MaxiPagoSDK {
    }
    async chargeBack(dto: RecursivePartial<ChargeBack>) {
       const XML = buildXMLChargeBack(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_XML, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse = ChargeBackResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
@@ -278,10 +281,10 @@ export class MaxiPagoSDK {
    }
    async createRecurring(dto: RecursivePartial<CreateRecurring>) {
       const XML = buildXMLCreateRecurring(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_XML, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse = CreateRecurringResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
@@ -294,10 +297,10 @@ export class MaxiPagoSDK {
    }
    async updateRecurring(dto: RecursivePartial<UpdateRecurring>) {
       const XML = buildXMLUpdateRecurring(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_API, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse = UpdateRecurringResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
@@ -309,10 +312,10 @@ export class MaxiPagoSDK {
    }
    async cancelRecurring(dto: RecursivePartial<DeleteRecurring>) {
       const XML = buildXMLDeleteRecurring(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_API, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse = CancelRecurringResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
@@ -324,10 +327,10 @@ export class MaxiPagoSDK {
    }
    async orderQuery(dto: RecursivePartial<OrderQuery>) {
       const XML = buildXMLOrderQuery(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.REPORTS_API, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse = OrderQueryResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
@@ -340,10 +343,10 @@ export class MaxiPagoSDK {
    }
    async zeroDollar(dto: RecursivePartial<ZeroDollar>) {
       const XML = buildXMLZeroDollar(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_XML, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse = CreateZeroDollarResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
@@ -356,10 +359,10 @@ export class MaxiPagoSDK {
    }
    async zeroDollarWithToken(dto: RecursivePartial<ZeroDollarWithToken>) {
       const XML = buildXMLZeroDollarWithToken(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_XML, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse =
          CreateZeroDollarWithTokenResponseSchema.safeParse(response);
@@ -373,10 +376,10 @@ export class MaxiPagoSDK {
    }
    async createPix(dto: RecursivePartial<CreatePix>) {
       const XML = buildXMLCreatePix(dto, this.auth);
-      if (this.requestLogger) {
-         this.requestLogger(XML);
-      }
       const { data } = await api.post(this.POST_XML, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
       const response = formatResponse(data);
       const parsedResponse = CreatePixResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
