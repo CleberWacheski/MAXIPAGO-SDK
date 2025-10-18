@@ -35,9 +35,20 @@ test("DEVE SER CAPAZ DE ATUALIZAR UM CLIENTE", async () => {
 });
 
 test("DEVE SER CAPAZ DE DELETAR UM CLIENTE", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
+   const sdk = new MaxiPagoSDK(auth, "development", (err) => {
+      console.log(err);
+   });
+   const customerId = await sdk.createCustomer({
+      customerIdExt: "46674194662",
+      firstName: "REDE Teste",
+      lastName: "REDE",
+      zip: "06460040",
+      email: "teste@teste.comm",
+      dob: "12/02/1991",
+      sex: "m",
+   });
    await sdk.deleteCustomer({
-      customerId: "123456",
+      customerId,
    });
 });
 
@@ -392,7 +403,7 @@ test("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
             installments: "infinite",
             period: "monthly",
             frequency: "1",
-            startDate: "2025-04-10",
+            startDate: "2025-12-10",
          },
          shipping: {
             address: "Rua Marcos Penteado Ulhoa Rodrigues",
@@ -456,7 +467,7 @@ test("DEVE SER CAPAZ DE DELETAR UMA RECORRÊNCIA", async () => {
             installments: "infinite",
             period: "monthly",
             frequency: "1",
-            startDate: "2025-04-10",
+            startDate: "2025-12-10",
          },
          shipping: {
             address: "Rua Marcos Penteado Ulhoa Rodrigues",
@@ -523,7 +534,7 @@ test("DEVE SER CAPAZ DE EDITAR UMA RECORRÊNCIA", async () => {
             installments: "infinite",
             period: "monthly",
             frequency: "1",
-            startDate: "2025-04-10",
+            startDate: "2025-12-10",
          },
          shipping: {
             address: "Rua Marcos Penteado Ulhoa Rodrigues",
