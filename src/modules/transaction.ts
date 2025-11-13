@@ -9,7 +9,7 @@ import {
    CreateAuthorizationTransactionOnly,
    CreateDirectTransaction,
 } from "src/types/transaction";
-import { OrderQuery } from "src/types/transaction-query";
+import { OrderQuery, type OrdersQuery } from "src/types/transaction-query";
 import { RecursivePartial } from "src/utils/recursive-partial";
 import { xmlBuilder } from "src/utils/utils";
 
@@ -80,6 +80,20 @@ export const buildXMLOrderQuery = (
    MPAuth: MaxiPagoAuth
 ) => {
    const data: RapiRequest<RecursivePartial<OrderQuery>> = {
+      verification: MPAuth,
+      request: request,
+      command: "transactionDetailReport",
+   };
+   return xmlBuilder.buildObject({
+      "rapi-request": data,
+   });
+};
+
+export const buildXMLOrdersQuery = (
+   request: RecursivePartial<OrdersQuery>,
+   MPAuth: MaxiPagoAuth
+) => {
+   const data: RapiRequest<RecursivePartial<OrdersQuery>> = {
       verification: MPAuth,
       request: request,
       command: "transactionDetailReport",

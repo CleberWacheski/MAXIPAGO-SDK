@@ -15,6 +15,7 @@ import {
    buildXMLCreateTransactionAuthorizationOnly,
    buildXMLCreateTransactionCaptureAfterAuthorization,
    buildXMLOrderQuery,
+   buildXMLOrdersQuery,
    createBuildXMLDirectTransaction,
    createBuildXMLDirectTransactionWithToken,
 } from "@module/transaction";
@@ -46,7 +47,10 @@ import {
    CreateTransactionCaptureAfterAuthorizationSchema,
    CreateTransactionWithTokenResponseSchema,
 } from "./response-schema/transaction";
-import { OrderQueryResponseSchema } from "./response-schema/transaction-query";
+import {
+   OrderQueryResponseSchema,
+   OrdersQueryResponseSchema,
+} from "./response-schema/transaction-query";
 import {
    CreateZeroDollarResponseSchema,
    CreateZeroDollarWithTokenResponseSchema,
@@ -68,7 +72,7 @@ import {
    CreateDirectTransaction,
    CreateRecurring,
 } from "./types/transaction";
-import { OrderQuery } from "./types/transaction-query";
+import { OrderQuery, type OrdersQuery } from "./types/transaction-query";
 import { ZeroDollar } from "./types/zero-dollar";
 import { ZeroDollarWithToken } from "./types/zero-dollar-token";
 import { RecursivePartial } from "./utils/recursive-partial";
@@ -117,7 +121,12 @@ export class MaxiPagoSDK {
       const parsedResponse = CreateCustomerResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -133,7 +142,12 @@ export class MaxiPagoSDK {
       const parsedResponse = UpdateCustomerResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -148,7 +162,12 @@ export class MaxiPagoSDK {
       const parsedResponse = DeleteCustomerResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -163,7 +182,12 @@ export class MaxiPagoSDK {
       const parsedResponse = CreateCardResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -179,7 +203,12 @@ export class MaxiPagoSDK {
       const parsedResponse = DeleteCardResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -197,7 +226,12 @@ export class MaxiPagoSDK {
          CreateTransactionAuthorizationOnlyResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -219,7 +253,12 @@ export class MaxiPagoSDK {
          CreateTransactionCaptureAfterAuthorizationSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -238,7 +277,12 @@ export class MaxiPagoSDK {
          CreateTransactionWithTokenResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -257,7 +301,12 @@ export class MaxiPagoSDK {
          CreateDirectTransactionResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -273,7 +322,12 @@ export class MaxiPagoSDK {
       const parsedResponse = ChargeBackResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -289,7 +343,12 @@ export class MaxiPagoSDK {
       const parsedResponse = CreateRecurringResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -305,7 +364,12 @@ export class MaxiPagoSDK {
       const parsedResponse = UpdateRecurringResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -320,7 +384,12 @@ export class MaxiPagoSDK {
       const parsedResponse = CancelRecurringResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -335,7 +404,33 @@ export class MaxiPagoSDK {
       const parsedResponse = OrderQueryResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
+         }
+         throw new Error(response);
+      }
+      return parsedResponse.data;
+   }
+   async ordersQuery(dto: RecursivePartial<OrdersQuery>) {
+      const XML = buildXMLOrdersQuery(dto, this.auth);
+      const { data } = await api.post(this.REPORTS_API, XML);
+      if (this.requestLogger) {
+         this.requestLogger(XML, data);
+      }
+      const response = formatResponse(data);
+      const parsedResponse = OrdersQueryResponseSchema.safeParse(response);
+      if (!parsedResponse.success) {
+         if (this.errorLogger) {
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -351,7 +446,12 @@ export class MaxiPagoSDK {
       const parsedResponse = CreateZeroDollarResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -368,7 +468,12 @@ export class MaxiPagoSDK {
          CreateZeroDollarWithTokenResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }
@@ -384,7 +489,12 @@ export class MaxiPagoSDK {
       const parsedResponse = CreatePixResponseSchema.safeParse(response);
       if (!parsedResponse.success) {
          if (this.errorLogger) {
-            this.errorLogger(response);
+            this.errorLogger(
+               JSON.stringify({
+                  response,
+                  errors: parsedResponse.error.issues.map((err) => err.path),
+               })
+            );
          }
          throw new Error(response);
       }

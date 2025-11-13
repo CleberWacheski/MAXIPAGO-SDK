@@ -874,3 +874,33 @@ xml=<?xml version="1.0" encoding="UTF-8"?>
    expect(response.transactionStatus).toBe("Captured");
    expect(response.transactionType).toBe("PixSale");
 });
+
+test("DEVE SER CAPAZ DE CONSULTAR VARIAS TRANSAÇÕES", async () => {
+   const sdk = new MaxiPagoSDK(auth, "development", (err) => {
+      console.log(err);
+   });
+   let transaction = await sdk.ordersQuery({
+      filterOptions: {
+         pageSize: 100,
+         period: "thismonth",
+         orderByDirection: "desc",
+      },
+   });
+
+   expect(transaction.result.records.record[0].referenceNumber).toBe(
+      "123456888"
+   );
+   expect(transaction.result.records.record).toHaveLength(100);
+
+   transaction = await sdk.ordersQuery({
+      filterOptions: {
+         pageSize: 100,
+         period: "thismonth",
+         orderByDirection: "desc",
+         pageNumber: 2,
+         pageToken: transaction.result.resultSetInfo.pageToken,
+      },
+   });
+   expect(transaction.result.records.record[0].referenceNumber !== "123456888");
+   expect(transaction.result.records.record).toHaveLength(100);
+});

@@ -1,6 +1,6 @@
 {
    "name": "maxipago-sdk",
-   "version": "2.2.0",
+   "version": "2.3.0",
    "description": "Esta SDK facilita a integração com a maxipago, permitindo que você se conecte a várias adquirentes com uma única solução. Compatível com diferentes métodos de pagamento, como cartões de crédito, débito, e-wallets, e muito mais. Oferece uma API simples e flexível para gerenciar transações, consultar status de pagamentos e realizar reembolsos, entre outras funcionalidades essenciais para uma experiência de pagamento fluida e segura.",
    "main": "./dist/index.js",
    "module": "./dist/index.mjs",
@@ -17,7 +17,7 @@
       "types": "./dist/index.d.ts"
    },
    "scripts": {
-      "test": "vitest",
+      "test": "vitest --testTimeout 80000",
       "build": "tsup"
    },
    "keywords": [
