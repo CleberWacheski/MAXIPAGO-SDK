@@ -102,4 +102,6 @@ type Recurring = {
    onFailureAction: "skip" | "pause";
    installments: string;
    failureThreshold: string;
+   firstAmount: string;
+   lastAmount: string;
 };

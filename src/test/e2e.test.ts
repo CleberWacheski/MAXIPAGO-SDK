@@ -395,6 +395,7 @@ test("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
             period: "monthly",
             frequency: "1",
             startDate: "2025-12-10",
+            firstAmount: "2000.50",
          },
          shipping: {
             address: "Rua Marcos Penteado Ulhoa Rodrigues",
