@@ -6,8 +6,11 @@ const auth = {
    merchantKey: process.env.MAXIPAGO_MERCHANT_KEY!,
 };
 
+const sdk = new MaxiPagoSDK(auth, "development", (err) => {
+   console.log(err);
+});
+
 test("DEVE SER CAPAZ DE CRIAR UM CLIENTE", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    const customerId = await sdk.createCustomer({
       customerIdExt: "46674194662",
       firstName: "REDE Teste",
@@ -21,7 +24,6 @@ test("DEVE SER CAPAZ DE CRIAR UM CLIENTE", async () => {
 });
 
 test("DEVE SER CAPAZ DE ATUALIZAR UM CLIENTE", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    await sdk.updateCustomer({
       customerId: "123456",
       customerIdExt: "46674194662",
@@ -35,9 +37,6 @@ test("DEVE SER CAPAZ DE ATUALIZAR UM CLIENTE", async () => {
 });
 
 test("DEVE SER CAPAZ DE DELETAR UM CLIENTE", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development", (err) => {
-      console.log(err);
-   });
    const customerId = await sdk.createCustomer({
       customerIdExt: "46674194662",
       firstName: "REDE Teste",
@@ -53,7 +52,6 @@ test("DEVE SER CAPAZ DE DELETAR UM CLIENTE", async () => {
 });
 
 test("DEVE SER CAPAZ DE CRIAR UM CARTÃO", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    const customerId = await sdk.createCustomer({
       customerIdExt: "46674194662",
       firstName: "REDE Teste",
@@ -82,7 +80,6 @@ test("DEVE SER CAPAZ DE CRIAR UM CARTÃO", async () => {
 });
 
 test("DEVE SER CAPAZ DE DELETAR UM CARTÃO", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    const customerId = await sdk.createCustomer({
       customerIdExt: "46674194662",
       firstName: "REDE Teste",
@@ -113,7 +110,6 @@ test("DEVE SER CAPAZ DE DELETAR UM CARTÃO", async () => {
 });
 
 test("DEVE SER CAPAZ DE FAZER UMA VENDA COM CARTÃO TOKENIZADO APROVADO", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    const customerId = await sdk.createCustomer({
       customerIdExt: "46674194662",
       firstName: "REDE Teste",
@@ -162,7 +158,6 @@ test("DEVE SER CAPAZ DE FAZER UMA VENDA COM CARTÃO TOKENIZADO APROVADO", async 
 });
 
 test("DEVE SER CAPAZ DE FAZER UMA VENDA COM CARTÃO TOKENIZADO DECLINADO", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    const customerId = await sdk.createCustomer({
       customerIdExt: "46674194662",
       firstName: "REDE Teste",
@@ -211,7 +206,6 @@ test("DEVE SER CAPAZ DE FAZER UMA VENDA COM CARTÃO TOKENIZADO DECLINADO", async
 });
 
 test("DEVE SER CAPAZ DE FAZER UMA TRANSAÇÃO ZERO DOLLAR COM TOKEN", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    const customerId = await sdk.createCustomer({
       customerIdExt: "46674194662",
       firstName: "REDE Teste",
@@ -257,7 +251,6 @@ test("DEVE SER CAPAZ DE FAZER UMA TRANSAÇÃO ZERO DOLLAR COM TOKEN", async () =
 });
 
 test("DEVE SER CAPAZ DE AUTORIZAR UMA COMPRA", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    const response = await sdk.createTransactionAuthorizationOnly({
       auth: {
          payment: {
@@ -302,7 +295,6 @@ test("DEVE SER CAPAZ DE AUTORIZAR UMA COMPRA", async () => {
 });
 
 test("DEVE SER CAPAZ DE CAPTURAR UMA COMPRA APOS SER AUTORIZADA", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    const response = await sdk.createTransactionAuthorizationOnly({
       auth: {
          payment: {
@@ -358,8 +350,7 @@ test("DEVE SER CAPAZ DE CAPTURAR UMA COMPRA APOS SER AUTORIZADA", async () => {
    expect(response2.transactionID).toBeTruthy();
 });
 
-test("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
+test.only("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
    const response = await sdk.createRecurring({
       recurringPayment: {
          processorID: "1",
@@ -423,7 +414,6 @@ test("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
 });
 
 test("DEVE SER CAPAZ DE DELETAR UMA RECORRÊNCIA", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    const response = await sdk.createRecurring({
       recurringPayment: {
          processorID: "1",
@@ -490,7 +480,6 @@ test("DEVE SER CAPAZ DE DELETAR UMA RECORRÊNCIA", async () => {
 });
 
 test("DEVE SER CAPAZ DE EDITAR UMA RECORRÊNCIA", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    const response = await sdk.createRecurring({
       recurringPayment: {
          processorID: "1",
@@ -590,7 +579,6 @@ test("DEVE SER CAPAZ DE EDITAR UMA RECORRÊNCIA", async () => {
 });
 
 test("DEVE SER CAPAZ DE CONSULTAR UMA TRANSAÇÃO", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    const customerId = await sdk.createCustomer({
       customerIdExt: "46674194662",
       firstName: "REDE Teste",
@@ -643,7 +631,6 @@ test("DEVE SER CAPAZ DE CONSULTAR UMA TRANSAÇÃO", async () => {
 });
 
 test("DEVE SER CAPAZ DE CRIAR UMA TRANSAÇÃO PIX", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    const response = await sdk.createPix({
       sale: {
          processorID: "1",
@@ -694,7 +681,6 @@ test("DEVE SER CAPAZ DE CRIAR UMA TRANSAÇÃO PIX", async () => {
 });
 
 test("DEVE SER CAPAZ DE LIDAR COM OS DADOS DO WEBHOOK", () => {
-   const sdk = new MaxiPagoSDK(auth, "development");
    let response = sdk.webHookHandler(`
 <Request>
 <transaction-event>
@@ -876,9 +862,6 @@ xml=<?xml version="1.0" encoding="UTF-8"?>
 });
 
 test("DEVE SER CAPAZ DE CONSULTAR VARIAS TRANSAÇÕES", async () => {
-   const sdk = new MaxiPagoSDK(auth, "development", (err) => {
-      console.log(err);
-   });
    let transaction = await sdk.ordersQuery({
       filterOptions: {
          pageSize: 100,

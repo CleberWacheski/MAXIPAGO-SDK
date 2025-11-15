@@ -34,6 +34,7 @@ type Recurring = {
       | "biMonthly"
       | "semiAnnual";
    lastDate: string;
+   firstAmount: string;
    lastAmount: string;
 };
 
