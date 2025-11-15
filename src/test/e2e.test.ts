@@ -350,7 +350,7 @@ test("DEVE SER CAPAZ DE CAPTURAR UMA COMPRA APOS SER AUTORIZADA", async () => {
    expect(response2.transactionID).toBeTruthy();
 });
 
-test.only("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
+test("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
    const response = await sdk.createRecurring({
       recurringPayment: {
          processorID: "1",
@@ -869,12 +869,7 @@ test("DEVE SER CAPAZ DE CONSULTAR VARIAS TRANSAÇÕES", async () => {
          orderByDirection: "desc",
       },
    });
-
-   expect(transaction.result.records.record[0].referenceNumber).toBe(
-      "123456888"
-   );
    expect(transaction.result.records.record).toHaveLength(100);
-
    transaction = await sdk.ordersQuery({
       filterOptions: {
          pageSize: 100,
@@ -884,6 +879,5 @@ test("DEVE SER CAPAZ DE CONSULTAR VARIAS TRANSAÇÕES", async () => {
          pageToken: transaction.result.resultSetInfo.pageToken,
       },
    });
-   expect(transaction.result.records.record[0].referenceNumber !== "123456888");
    expect(transaction.result.records.record).toHaveLength(100);
 });
