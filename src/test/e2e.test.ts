@@ -350,7 +350,7 @@ test("DEVE SER CAPAZ DE CAPTURAR UMA COMPRA APOS SER AUTORIZADA", async () => {
    expect(response2.transactionID).toBeTruthy();
 });
 
-test("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
+test.only("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
    const response = await sdk.createRecurring({
       recurringPayment: {
          processorID: "1",
@@ -394,7 +394,7 @@ test("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
             installments: "infinite",
             period: "monthly",
             frequency: "1",
-            startDate: "2025-12-10",
+            startDate: "2025-12-15",
             firstAmount: "2000.50",
          },
          shipping: {

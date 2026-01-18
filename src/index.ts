@@ -88,8 +88,8 @@ export class MaxiPagoSDK {
       private readonly errorLogger?: (err: string) => void,
       private readonly requestLogger?: (
          request: string,
-         response: string
-      ) => void
+         response: string,
+      ) => void,
    ) {
       this.POST_API =
          this.env === "development"
@@ -111,6 +111,29 @@ export class MaxiPagoSDK {
       }
    }
 
+   private humanReadableError(response: string) {
+      const error = response.toLowerCase().trim();
+      if (error.includes("insufficient")) {
+         return "Saldo insuficiente para realizar a operação";
+      }
+      if (error.includes("declined by rede")) {
+         return "Cartão rejeitado pelo gateway de pagamento.";
+      }
+      if (error.includes("not a valid credit card number")) {
+         return "O cartão tem dados inválidos";
+      }
+      if (error.includes("fraud")) {
+         return "Fraude ou cartão inseguro para realizar a operação";
+      }
+      if (error.includes("do not retry")) {
+         return "Pagamento recusado, nao tente novamente";
+      }
+      if (error.includes("try again")) {
+         return "Erro ao processar o pagamento por favor, tente novamente";
+      }
+      return "Erro ao fazer o processamento de seu pagamento, por favor revise os dados e tente novamente";
+   }
+
    async createCustomer(dto: RecursivePartial<CreateCustomer>) {
       const XML = buildXMLCreateCustomer(dto, this.auth);
       const { data } = await api.post<string>(this.POST_API, XML);
@@ -125,7 +148,7 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
@@ -134,7 +157,7 @@ export class MaxiPagoSDK {
    }
    async updateCustomer(dto: RecursivePartial<UpdateCustomer>) {
       const XML = buildXMLUpdateCustomer(dto, this.auth);
-      const { data } = await api.post(this.POST_API, XML);
+      const { data } = await api.post<string>(this.POST_API, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -146,7 +169,7 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
@@ -154,7 +177,7 @@ export class MaxiPagoSDK {
    }
    async deleteCustomer(dto: RecursivePartial<DeleteCustomer>) {
       const XML = buildXMLDeleteCustomer(dto, this.auth);
-      const { data } = await api.post(this.POST_API, XML);
+      const { data } = await api.post<string>(this.POST_API, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -166,7 +189,7 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
@@ -174,7 +197,7 @@ export class MaxiPagoSDK {
    }
    async createCard(dto: RecursivePartial<CreateCard>) {
       const XML = buildXMLCreateCard(dto, this.auth);
-      const { data } = await api.post(this.POST_API, XML);
+      const { data } = await api.post<string>(this.POST_API, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -186,7 +209,7 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
@@ -195,7 +218,7 @@ export class MaxiPagoSDK {
    }
    async deleteCard(dto: RecursivePartial<DeleteCard>) {
       const XML = buildXMLDeleteCard(dto, this.auth);
-      const { data } = await api.post(this.POST_API, XML);
+      const { data } = await api.post<string>(this.POST_API, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -207,17 +230,17 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
       }
    }
    async createTransactionAuthorizationOnly(
-      dto: RecursivePartial<CreateAuthorizationTransactionOnly>
+      dto: RecursivePartial<CreateAuthorizationTransactionOnly>,
    ) {
       const XML = buildXMLCreateTransactionAuthorizationOnly(dto, this.auth);
-      const { data } = await api.post(this.POST_XML, XML);
+      const { data } = await api.post<string>(this.POST_XML, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -230,21 +253,21 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
-         throw new Error(response);
+         throw new Error(this.humanReadableError(data));
       }
       return parsedResponse.data;
    }
    async createTransactionCaptureAfterAuthorization(
-      dto: RecursivePartial<CreateTransactionCaptureAfterAuthorization>
+      dto: RecursivePartial<CreateTransactionCaptureAfterAuthorization>,
    ) {
       const XML = buildXMLCreateTransactionCaptureAfterAuthorization(
          dto,
-         this.auth
+         this.auth,
       );
-      const { data } = await api.post(this.POST_XML, XML);
+      const { data } = await api.post<string>(this.POST_XML, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -257,18 +280,18 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
-         throw new Error(response);
+         throw new Error(this.humanReadableError(data));
       }
       return parsedResponse.data;
    }
    async createTransactionWithToken(
-      dto: RecursivePartial<CreateDirectTransactionWithToken>
+      dto: RecursivePartial<CreateDirectTransactionWithToken>,
    ) {
       const XML = createBuildXMLDirectTransactionWithToken(dto, this.auth);
-      const { data } = await api.post(this.POST_XML, XML);
+      const { data } = await api.post<string>(this.POST_XML, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -281,18 +304,18 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
-         throw new Error(response);
+         throw new Error(this.humanReadableError(data));
       }
       return parsedResponse.data;
    }
    async createDirectTransaction(
-      dto: RecursivePartial<CreateDirectTransaction>
+      dto: RecursivePartial<CreateDirectTransaction>,
    ) {
       const XML = createBuildXMLDirectTransaction(dto, this.auth);
-      const { data } = await api.post(this.POST_XML, XML);
+      const { data } = await api.post<string>(this.POST_XML, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -305,16 +328,16 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
-         throw new Error(response);
+         throw new Error(this.humanReadableError(data));
       }
       return parsedResponse.data;
    }
    async chargeBack(dto: RecursivePartial<ChargeBack>) {
       const XML = buildXMLChargeBack(dto, this.auth);
-      const { data } = await api.post(this.POST_XML, XML);
+      const { data } = await api.post<string>(this.POST_XML, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -326,7 +349,7 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
@@ -335,7 +358,7 @@ export class MaxiPagoSDK {
    }
    async createRecurring(dto: RecursivePartial<CreateRecurring>) {
       const XML = buildXMLCreateRecurring(dto, this.auth);
-      const { data } = await api.post(this.POST_XML, XML);
+      const { data } = await api.post<string>(this.POST_XML, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -347,16 +370,16 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
-         throw new Error(response);
+         throw new Error(this.humanReadableError(data));
       }
       return parsedResponse.data;
    }
    async updateRecurring(dto: RecursivePartial<UpdateRecurring>) {
       const XML = buildXMLUpdateRecurring(dto, this.auth);
-      const { data } = await api.post(this.POST_API, XML);
+      const { data } = await api.post<string>(this.POST_API, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -368,7 +391,7 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
@@ -376,7 +399,7 @@ export class MaxiPagoSDK {
    }
    async cancelRecurring(dto: RecursivePartial<DeleteRecurring>) {
       const XML = buildXMLDeleteRecurring(dto, this.auth);
-      const { data } = await api.post(this.POST_API, XML);
+      const { data } = await api.post<string>(this.POST_API, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -388,7 +411,7 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
@@ -396,7 +419,7 @@ export class MaxiPagoSDK {
    }
    async orderQuery(dto: RecursivePartial<OrderQuery>) {
       const XML = buildXMLOrderQuery(dto, this.auth);
-      const { data } = await api.post(this.REPORTS_API, XML);
+      const { data } = await api.post<string>(this.REPORTS_API, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -408,7 +431,7 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
@@ -417,7 +440,7 @@ export class MaxiPagoSDK {
    }
    async ordersQuery(dto: RecursivePartial<OrdersQuery>) {
       const XML = buildXMLOrdersQuery(dto, this.auth);
-      const { data } = await api.post(this.REPORTS_API, XML);
+      const { data } = await api.post<string>(this.REPORTS_API, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -429,7 +452,7 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
@@ -438,7 +461,7 @@ export class MaxiPagoSDK {
    }
    async zeroDollar(dto: RecursivePartial<ZeroDollar>) {
       const XML = buildXMLZeroDollar(dto, this.auth);
-      const { data } = await api.post(this.POST_XML, XML);
+      const { data } = await api.post<string>(this.POST_XML, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -450,7 +473,7 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
@@ -459,7 +482,7 @@ export class MaxiPagoSDK {
    }
    async zeroDollarWithToken(dto: RecursivePartial<ZeroDollarWithToken>) {
       const XML = buildXMLZeroDollarWithToken(dto, this.auth);
-      const { data } = await api.post(this.POST_XML, XML);
+      const { data } = await api.post<string>(this.POST_XML, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -472,7 +495,7 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
@@ -481,7 +504,7 @@ export class MaxiPagoSDK {
    }
    async createPix(dto: RecursivePartial<CreatePix>) {
       const XML = buildXMLCreatePix(dto, this.auth);
-      const { data } = await api.post(this.POST_XML, XML);
+      const { data } = await api.post<string>(this.POST_XML, XML);
       if (this.requestLogger) {
          this.requestLogger(XML, data);
       }
@@ -493,7 +516,7 @@ export class MaxiPagoSDK {
                JSON.stringify({
                   response,
                   errors: parsedResponse.error.issues.map((err) => err.path),
-               })
+               }),
             );
          }
          throw new Error(response);
