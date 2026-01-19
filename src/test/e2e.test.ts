@@ -201,7 +201,7 @@ test("DEVE SER CAPAZ DE FAZER UMA VENDA COM CARTÃO TOKENIZADO DECLINADO", async
                },
             },
          },
-      })
+      }),
    ).rejects.toThrow();
 });
 
@@ -350,7 +350,7 @@ test("DEVE SER CAPAZ DE CAPTURAR UMA COMPRA APOS SER AUTORIZADA", async () => {
    expect(response2.transactionID).toBeTruthy();
 });
 
-test.only("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
+test("DEVE SER CAPAZ DE CRIAR UMA RECORRÊNCIA", async () => {
    const response = await sdk.createRecurring({
       recurringPayment: {
          processorID: "1",
@@ -881,4 +881,54 @@ test("DEVE SER CAPAZ DE CONSULTAR VARIAS TRANSAÇÕES", async () => {
       },
    });
    expect(transaction.result.records.record).toHaveLength(100);
+});
+
+test.only("DEVE SER CAPAZ DE RETORNAR O ERRO CORRETAMENTE", async () => {
+   const customerId = await sdk.createCustomer({
+      customerIdExt: "46674194662",
+      firstName: "REDE Teste",
+      lastName: "REDE",
+      zip: "06460040",
+      email: "teste@teste.comm",
+      dob: "12/02/1991",
+      sex: "m",
+   });
+   const token = await sdk.createCard({
+      customerId: customerId,
+      creditCardNumber: "4111111111111111",
+      expirationMonth: "12",
+      expirationYear: "2028",
+      billingName: "Maxipago Brasil",
+      billingAddress1: "Rua Marcos Penteado Ulhoa Rodrigues",
+      billingAddress2: "11 Andar",
+      billingCity: "Barueri",
+      billingState: "SP",
+      billingZip: "06460040",
+      billingCountry: "BR",
+      billingPhone: "1121218536",
+      billingEmail: "teste@teste.com",
+   });
+   expect(
+      sdk.createTransactionWithToken({
+         sale: {
+            processorID: "1",
+            referenceNum: "123456",
+            payment: {
+               currencyCode: "BRL",
+               chargeTotal: "20.09",
+            },
+            transactionDetail: {
+               payType: {
+                  onFile: {
+                     customerId: customerId,
+                     token: token,
+                     cvvNumber: "123",
+                  },
+               },
+            },
+         },
+      }),
+   ).rejects.toThrowError(
+      new Error("Cartão rejeitado pelo gateway de pagamento"),
+   );
 });

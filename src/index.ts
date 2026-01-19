@@ -112,12 +112,13 @@ export class MaxiPagoSDK {
    }
 
    private humanReadableError(response: string) {
+      console.log(response);
       const error = response.toLowerCase().trim();
       if (error.includes("insufficient")) {
          return "Saldo insuficiente para realizar a operação";
       }
-      if (error.includes("declined by rede")) {
-         return "Cartão rejeitado pelo gateway de pagamento.";
+      if (error.includes("declined")) {
+         return "Cartão rejeitado pelo gateway de pagamento";
       }
       if (error.includes("not a valid credit card number")) {
          return "O cartão tem dados inválidos";
