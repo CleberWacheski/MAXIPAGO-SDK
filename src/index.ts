@@ -524,7 +524,7 @@ export class MaxiPagoSDK {
       }
       return parsedResponse.data;
    }
-   webHookHandler(xml: string) {
+   static webHookHandler(xml: string) {
       const response = WebhookXMLHandler(xml);
       return response;
    }
